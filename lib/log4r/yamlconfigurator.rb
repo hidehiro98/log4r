@@ -57,12 +57,12 @@ module Log4r
         doc.has_key?( 'log4r_config') and log4r_config = doc['log4r_config'] and break
       }
       if log4r_config.nil?
-        raise ConfigError, 
+        raise ConfigError,
         "Key 'log4r_config:' not defined in yaml documents", caller[1..-1]
       end
       decode_yaml( log4r_config)
     end
-    
+
     def self.decode_yaml( cfg)
       decode_pre_config( cfg['pre_config'])
       cfg['outputters'].each{ |op| decode_outputter( op)}
@@ -85,7 +85,7 @@ module Log4r
         raise ConfigError, te.message, caller[1..-4]
       end
     end
-    
+
     def self.global_config( e)
       return if e.nil?
       globlev = e['level']
@@ -127,7 +127,7 @@ module Log4r
       begin
         Outputter[name] = Log4r.const_get(type).new name, opts
       rescue Exception => ae
-        raise ConfigError, 
+        raise ConfigError,
         "Problem creating outputter: #{ae.message}", caller[1..-3]
       end
       Outputter[name].only_at( *only_levels) if only_levels.size > 0
@@ -136,7 +136,7 @@ module Log4r
 
     def self.decode_formatter( fo)
       return nil if fo.nil?
-      type = fo['type'] 
+      type = fo['type']
       raise ConfigError, "Formatter missing type", caller[1..-4] if type.nil?
       begin
         return Log4r.const_get(type).new(decode_hash_params(fo))
